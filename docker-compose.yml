@@ -1,0 +1,41 @@
+version: '3.4'
+services:
+  web:
+    container_name: web
+    hostname: web
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: npm-deps
+    restart: on-failure
+    networks:
+      - cric-network
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    volumes:
+      - ./app:/var/www/counselling-web/app:cached
+  weaviate:
+    container_name: weaviate
+    hostname: weaviate
+    image: semitechnologies/weaviate:latest
+    ports:
+      - 8080:8080
+    restart: on-failure:0
+    networks:
+      - cric-network
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'none'
+      CLUSTER_HOSTNAME: 'node1'
+
+networks:
+  cric-network:
+    driver: bridge
+
+volumes:
+  weaviate-data:
+    driver: local
