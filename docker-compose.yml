@@ -15,7 +15,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./app:/var/www/counselling-web/app:cached
+      - ./src:/var/www/cric/src:cached
   weaviate:
     container_name: weaviate
     hostname: weaviate
